@@ -66,7 +66,7 @@ jobs:
     defaults:
         run:
           shell: bash
-          working-directory: ./build
+          working-directory: build
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -77,7 +77,7 @@ jobs:
   
       - name: Create working directory
         run: |
-          mkdir ${{ env.working-directory }} -p
+          mkdir ${{ env.workspace }} -p
       - name: Setup variables
         id: vars
         run: |
