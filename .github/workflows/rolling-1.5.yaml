@@ -64,13 +64,6 @@ jobs:
       image: vyos/vyos-build:current
       options: --privileged
     steps:
-      - name: Generate Token
-        uses: actions/create-github-app-token@v1
-        id: app-token
-        with:
-          app-id: "${{ secrets.BOT_APP_ID }}"
-          private-key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -248,7 +241,7 @@ jobs:
       - name: Create release with artifact
         uses: ncipollo/release-action@6c75be85e571768fa31b40abf38de58ba0397db5 # v1.13.0
         with:
-          token: "${{ steps.app-token.outputs.token }}"
+          token: "${{ secrets.GITHUB_TOKEN  }}"
           tag: "v${{ steps.vars.outputs.tag-name }}"
           artifacts: "./vyos-build/build/vyos-${{ steps.vars.outputs.iso-name }}.iso"
           artifactErrorsFailBuild: true
@@ -261,13 +254,13 @@ jobs:
         with:
           name: 'PREV_COMMIT'
           value: ${{ needs.checkVersion.outputs.latest_commit }}
-          token: ${{ steps.app-token.outputs.token }}
+          token: ${{ secrets.GITHUB_TOKEN  }}
 
       - name: Delete orphaned release
         if: failure()
         uses: dev-drprasad/delete-tag-and-release@5eafd8668311bf3e4d6c1e9898f32a317103de68 # v0.2.1
         env:
-          GITHUB_TOKEN: "${{ steps.app-token.outputs.token }}"
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN  }}"
         with:
           tag_name: "v${{ steps.vars.outputs.tag-name }}"
           delete_release: true
@@ -278,4 +271,4 @@ jobs:
           keep_latest: 120
           delete_tags: true
         env:
-          GITHUB_TOKEN: "${{ steps.app-token.outputs.token }}"
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN  }}"
