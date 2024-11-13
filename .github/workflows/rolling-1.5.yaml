@@ -77,7 +77,7 @@ jobs:
   
       - name: Create working directory
         run: |
-          mkdir ${{ env.workspace }} -p
+          mkdir ${{ github.workspace }} -p
       - name: Setup variables
         id: vars
         run: |
