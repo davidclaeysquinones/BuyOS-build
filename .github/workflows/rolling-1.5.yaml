@@ -84,7 +84,10 @@ jobs:
         run: |
           git clone -b ${{ env.VYOS_BRANCH }} --depth 1 --single-branch ${{ env.VYOS_URL }}
           echo "vyos_kernel_version=$(awk -v key="kernel_version" '$1 == key {gsub(/"/, "", $3); print $3}' "vyos-build/data/defaults.toml")" > "$GITHUB_OUTPUT"
-  
+          
+      - name: Show kernel version
+        run: |
+          run echo Kernel version : ${{ steps.clone-vyos.outputsvyos_kernel_version }}
       - name: Download sops deb
         uses: robinraju/release-downloader@768b85c8d69164800db5fc00337ab917daf3ce68 # v1.7
         with:
