@@ -76,9 +76,10 @@ jobs:
           sparse-checkout: |
             custom
   
-      - name: Create working directory
+      - name: Create working directories
         run: |
-          mkdir ${{ github.workspace }}/build -p
+          mkdir ${{ env.KERNEL_DIRECTORY }} -p
+          mkdir ${{ env.BUILD_DIRECTORY }} -p
       - name: Setup variables
         id: vars
         run: |
@@ -147,7 +148,7 @@ jobs:
           [ -z "$CONFIG_FRAGMENTS" ] && echo "No config fragments found in custom/kernel-configs, skipping" && exit 0
 
           # Merge config fragments
-          KCONFIG_CONFIG=newconfig vyos-build/packages/linux-kernel/linux/scripts/kconfig/merge_config.sh -m $ORIGINAL_CONFIG $CONFIG_FRAGMENTS
+          KCONFIG_CONFIG=newconfig ${{ env.BUILD_DIRECTORY }}/packages/linux-kernel/linux/scripts/kconfig/merge_config.sh -m $ORIGINAL_CONFIG $CONFIG_FRAGMENTS
 
           # Handle merge result
           if [ $? -eq 0 ]; then
