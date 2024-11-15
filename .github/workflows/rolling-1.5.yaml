@@ -127,9 +127,9 @@ jobs:
           git clone -b v${{ steps.clone-vyos.outputs.vyos_kernel_version }} --depth 1 --single-branch https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
   
       - name: Fetch linux-firmware sources
-        working-directory: ${{ env.KERNEL_DIRECTORY }}
         if: steps.cache-kernel-restore.outputs.cache-hit != 'true'
         run: |
+          cd ${{ env.KERNEL_DIRECTORY }}
           firmware_tag=$(sed -n "/'name': 'linux-firmware'/ s/.*'scmCommit': '\([0-9]\{8\}\)'.*/\1/p" Jenkinsfile)
           git clone -b $firmware_tag --depth 1 --single-branch https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
   
