@@ -142,6 +142,9 @@ jobs:
           TARGET_CONFIG=${{ env.KERNEL_DIRECTORY }}/linux/arch/x86/configs/vyos_defconfig
           CONFIG_FRAGMENTS=$(find custom/kernel-configs -type f)
 
+          echo Original config : $ORIGINAL_CONFIG
+          echo Target config : $TARGET_CONFIG
+
           # Exit if no config fragments found
           [ -z "$CONFIG_FRAGMENTS" ] && echo "No config fragments found in custom/kernel-configs, skipping" && exit 0
 
