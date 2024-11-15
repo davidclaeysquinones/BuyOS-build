@@ -145,7 +145,7 @@ jobs:
           echo Original config : $ORIGINAL_CONFIG
           echo Target config : $TARGET_CONFIG
 
-          echo check original file : $(ls -al ${{ env.KERNEL_DIRECTORY }})
+          echo check original file : $(ls -al ${{ env.KERNEL_DIRECTORY }})/
           echo check original file : $(ls -al ${{ env.KERNEL_DIRECTORY }}/arch)
 
           # Exit if no config fragments found
