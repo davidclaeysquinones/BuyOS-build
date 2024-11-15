@@ -119,15 +119,13 @@ jobs:
             ${{ env.KERNEL_DIRECTORY }}/linux-firmware
             ${{ env.KERNEL_DIRECTORY }}/**/*.deb
           key: ${{ github.workflow }}-v${{ steps.clone-vyos.outputs.vyos_kernel_version }}
-      - name: Create working directories
-        if: steps.cache-kernel-restore.outputs.cache-hit != 'true'
-        run: |
-            mkdir ${{ env.KERNEL_DIRECTORY }} -p
-            mkdir ${{ env.BUILD_DIRECTORY }} -p
       - name: Fetch kernel sources
         working-directory: ${{ env.KERNEL_DIRECTORY }}
         if: steps.cache-kernel-restore.outputs.cache-hit != 'true'
-        run: git clone -b v${{ steps.clone-vyos.outputs.vyos_kernel_version }} --depth 1 --single-branch https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+        run: |
+          mkdir ${{ env.KERNEL_DIRECTORY }} -p
+          cd ${{ env.KERNEL_DIRECTORY }}
+          git clone -b v${{ steps.clone-vyos.outputs.vyos_kernel_version }} --depth 1 --single-branch https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
   
       - name: Fetch linux-firmware sources
         working-directory: ${{ env.KERNEL_DIRECTORY }}
