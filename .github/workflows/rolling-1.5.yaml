@@ -125,6 +125,7 @@ jobs:
           mkdir ${{ env.KERNEL_DIRECTORY }} -p
           cd ${{ env.KERNEL_DIRECTORY }}
           git clone -b v${{ steps.clone-vyos.outputs.vyos_kernel_version }} --depth 1 --single-branch https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+          echo kernel dir : $(ls -al)
   
       - name: Fetch linux-firmware sources
         if: steps.cache-kernel-restore.outputs.cache-hit != 'true'
