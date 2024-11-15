@@ -104,7 +104,7 @@ jobs:
           repository: mozilla/sops
           latest: true
           fileName: "*amd64.deb"
-          out-file-path: vyos-build/packages
+          out-file-path: ${{ env.BUILD_DIRECTORY }}/packages
   
       - name: Download vyaml deb
         uses: robinraju/release-downloader@v1.9
@@ -112,7 +112,7 @@ jobs:
           repository: p3lim/vyaml
           latest: true
           fileName: "*amd64.deb"
-          out-file-path: vyos-build/packages
+          out-file-path: ${{ env.BUILD_DIRECTORY }}/packages
   
       - name: Restore cached kernel and module sources
         id: cache-kernel-restore
@@ -149,7 +149,7 @@ jobs:
           [ -z "$CONFIG_FRAGMENTS" ] && echo "No config fragments found in custom/kernel-configs, skipping" && exit 0
 
           # Merge config fragments
-          KCONFIG_CONFIG=newconfig ${{ env.BUILD_DIRECTORY }}/packages/linux-kernel/linux/scripts/kconfig/merge_config.sh -m $ORIGINAL_CONFIG $CONFIG_FRAGMENTS
+          KCONFIG_CONFIG=newconfig ${{ env.KERNEL_DIRECTORY }}/linux/scripts/kconfig/merge_config.sh -m $ORIGINAL_CONFIG $CONFIG_FRAGMENTS
 
           # Handle merge result
           if [ $? -eq 0 ]; then
@@ -202,27 +202,27 @@ jobs:
         id: kernel-cache
         with:
           path: |
-           ${{ env.BUILD_DIRECTORY }}/packages/linux-kernel/linux
-           ${{ env.BUILD_DIRECTORY }}/packages/linux-kernel/kernel-vars
-           ${{ env.BUILD_DIRECTORY }}/packages/linux-kernel/linux-firmware
-           ${{ env.BUILD_DIRECTORY }}/packages/linux-kernel/**/*.deb
+           ${{ env.KERNEL_DIRECTORY }}/linux
+           ${{ env.KERNEL_DIRECTORY }}/kernel-vars
+           ${{ env.KERNEL_DIRECTORY }}/linux-firmware
+           ${{ env.KERNEL_DIRECTORY }}/**/*.deb
           key: ${{ github.workflow }}-v${{ steps.clone-vyos.outputs.vyos_kernel_version }}
   
       - name: Symlink kernel
         run: |
           mkdir -p /usr/src
-          ln -sv ${{ env.BUILD_DIRECTORY }}/packages/linux-kernel/linux /usr/src/linux
+          ln -sv ${{ env.KERNEL_DIRECTORY }}linux /usr/src/linux
   
       - name: Debug ls of packages and linux-kernel folder
         run: |
           ls -al ${{ env.BUILD_DIRECTORY }}/packages
-          ls -al ${{ env.BUILD_DIRECTORY }}/packages/linux-kernel/
+          ls -al ${{ env.KERNEL_DIRECTORY }}
   
       - name: "Create symbolic links for cached .deb files"
         if: steps.cache-kernel-restore.outputs.cache-hit == 'true' || steps.kernel-module-ixgbe-cache-restore.outputs.cache-hit == 'true'
         shell: bash
         run: |
-          cd ${{ env.BUILD_DIRECTORY }}/packages/linux-kernel
+          cd ${{ env.KERNEL_DIRECTORY }}
           for package in $(ls linux-*.deb)
           do
             ln -sf linux-kernel/$package ..
