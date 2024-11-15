@@ -76,11 +76,6 @@ jobs:
           path: .
           sparse-checkout: |
             custom
-  
-      - name: Create working directories
-        run: |
-          mkdir ${{ env.KERNEL_DIRECTORY }} -p
-          mkdir ${{ env.BUILD_DIRECTORY }} -p
       - name: Setup variables
         id: vars
         run: |
@@ -124,7 +119,11 @@ jobs:
             ${{ env.KERNEL_DIRECTORY }}/linux-firmware
             ${{ env.KERNEL_DIRECTORY }}/**/*.deb
           key: ${{ github.workflow }}-v${{ steps.clone-vyos.outputs.vyos_kernel_version }}
-  
+      - name: Create working directories
+        if: steps.cache-kernel-restore.outputs.cache-hit != 'true'
+        run: |
+            mkdir ${{ env.KERNEL_DIRECTORY }} -p
+            mkdir ${{ env.BUILD_DIRECTORY }} -p
       - name: Fetch kernel sources
         working-directory: ${{ env.KERNEL_DIRECTORY }}
         if: steps.cache-kernel-restore.outputs.cache-hit != 'true'
