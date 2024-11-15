@@ -23,8 +23,9 @@ env:
   VYOS_BUILD_BY: ${{ vars.BUILD_BY }}
   VYOS_BUILD_TYPE: release
   VYOS_VERSION: 1.5-rolling
-  KERNEL_DIRECTORY: ${{ github.workspace }}/linux-kernel
-  BUILD_DIRECTORY: ${{ github.workspace }}/build
+  BUILD_DIRECTORY: ${{ github.workspace }}/vyos-build
+  KERNEL_DIRECTORY: ${{ github.workspace }}/vyos-build/packages/linux-kernel
+
 
 jobs:
   checkVersion:
@@ -118,10 +119,10 @@ jobs:
         uses: buildjet/cache/restore@v3
         with:
           path: |
-            vyos-build/packages/linux-kernel/linux
-            vyos-build/packages/linux-kernel/kernel-vars
-            vyos-build/packages/linux-kernel/linux-firmware
-            vyos-build/packages/linux-kernel/**/*.deb
+            ${{ env.KERNEL_DIRECTORY }}/linux
+            ${{ env.KERNEL_DIRECTORY }}/kernel-vars
+            ${{ env.KERNEL_DIRECTORY }}/linux-firmware
+            ${{ env.KERNEL_DIRECTORY }}/**/*.deb
           key: ${{ github.workflow }}-v${{ steps.clone-vyos.outputs.vyos_kernel_version }}
   
       - name: Fetch kernel sources
