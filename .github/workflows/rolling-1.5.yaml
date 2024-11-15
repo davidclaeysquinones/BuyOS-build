@@ -145,7 +145,7 @@ jobs:
           echo Original config : $ORIGINAL_CONFIG
           echo Target config : $TARGET_CONFIG
 
-          echo check original file : $(ls $ORIGINAL_CONFIG)
+          echo check original file : $(ls -al ${{ env.KERNEL_DIRECTORY }}/arch/x86/configs)
 
           # Exit if no config fragments found
           [ -z "$CONFIG_FRAGMENTS" ] && echo "No config fragments found in custom/kernel-configs, skipping" && exit 0
