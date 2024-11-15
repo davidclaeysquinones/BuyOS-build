@@ -120,7 +120,6 @@ jobs:
             ${{ env.KERNEL_DIRECTORY }}/**/*.deb
           key: ${{ github.workflow }}-v${{ steps.clone-vyos.outputs.vyos_kernel_version }}
       - name: Fetch kernel sources
-        working-directory: ${{ env.KERNEL_DIRECTORY }}
         if: steps.cache-kernel-restore.outputs.cache-hit != 'true'
         run: |
           mkdir ${{ env.KERNEL_DIRECTORY }} -p
